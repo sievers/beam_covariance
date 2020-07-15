@@ -50,7 +50,7 @@ else:
     #this is all reading in the beam profiles and getting them into 2d arrays of theta,phi, which seems
     #to be pretty reliably what the beam simulation software produce
     print("Reading " + tag)
-    fname=tag+'/results_pattern_' + tag + '_total90.dat'
+    fname='./'+tag+'/results_pattern_' + tag + '_total90.dat'
     dat=np.loadtxt(fname,delimiter=',')
     f=open(fname,'r')
     ll=f.readline()[:-1]
@@ -79,6 +79,7 @@ else:
     
     dat=dat[:,2:]
     nspec=dat.shape[1]
+assert(1==0)
 
 #pick an nside, and set up healpix theta,phi values
 nside=256
@@ -141,6 +142,8 @@ for ii in range(nspec):
     #assert(1==0)
 t2=time.time()
 print('interpolated beam in ' + repr(t2-t1))
+
+
 mycov=np.dot(beams.T,beams)
 mycov2=2*np.dot(np.conj(alms[lmax:,:].T),alms[lmax:,:])+np.dot(alms[:lmax,:].T,alms[:lmax,:])
 mycov2=mycov2*healpy.nside2npix(nside)/4/np.pi
@@ -266,6 +269,15 @@ plt.ylabel("Modes 2,3 Amps (K)")
 plt.legend(['Mode 2','Mode 3'])
 plt.title("GSM Amplitudes, " + tag)
 plt.savefig("gsm_amps_" + tag + '.png')
+
+plt.figure(6)
+plt.clf()
+plt.plot(ha*12/np.pi,np.median(gsm_map)*amps[0,:]/np.mean(amps[0,:]))
+plt.xlabel("Hour Angle (arbitrary offset)")
+plt.ylabel("Mode 1 Amps (K)")
+plt.title("GSM Amplitudes, " + tag)
+plt.savefig("gsm_amps_mode0_" + tag + '.png')
+
 
 
 plt.clf()
